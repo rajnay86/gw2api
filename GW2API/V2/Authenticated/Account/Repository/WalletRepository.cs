@@ -1,53 +1,27 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using GW2Api.Common;
-using GW2Api.V2.Authenticated.Account.Models;
-using GW2Api.V2.Misc.Repository;
+using GW2API.Common;
+using GW2API.Common.Interfaces;
+using GW2API.V2.Authenticated.Account.Models;
 using RestSharp;
+using System.Threading.Tasks;
 
-namespace GW2Api.V2.Authenticated.Account.Repository
+namespace GW2API.V2.Authenticated.Account.Repository
 {
-    public class WalletRepository
+    public class WalletRepository : IAllItemRepository<Wallet>
     {
-        private static List<Wallet> GetWallet(string apiKey)
+        private readonly string _requestName = "account/wallet";
+        private GW2ClientAuthorized _client;
+        public WalletRepository(string apiKey)
         {
-            var client = new GW2ClientAuthorized(2, apiKey);
-            var request = new RestRequest("account/wallet");
-            var response = client.Execute<List<Wallet>>(request);
-            if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
-            {
-                return null;
-            }
+            _client = new GW2ClientAuthorized(apiKey);
+            _client.CheckPermissions(PermissionValues.wallet);
+        }
+
+        public async Task<List<Wallet>> GetAllItems()
+        {
+            var request = new RestRequest(_requestName);
+            var response = await _client.ExecuteTaskAsync<List<Wallet>>(request);
             return response.Data;
-        }
-
-        public static Dictionary<string, int> GetWalletWithNames(string apiKey)
-        {
-            var wallet = GetWallet(apiKey);
-            if (wallet == null)
-            {
-                return null;
-            }
-            var currencies = CurrencyRepository.GetCurrencies();
-            var walletWithNames = currencies.Zip(wallet, (k, v) => new { k.name, v.value }).ToDictionary(x => x.name, x=> x.value);
-            return walletWithNames;
-        }
-
-        public static int[] GetCoin(string apiKey)
-        {
-            int[] money = new int[3];
-            var wallet = GetWallet(apiKey).FirstOrDefault(w => w.id == 1);
-            if(wallet == null)
-            {
-                return null;
-            }
-            var copper = wallet.value;
-            money[0] = copper / 10000;
-            copper = copper % 10000;
-            money[1] = copper / 100;
-            copper = copper % 100;
-            money[2] = copper;
-            return money;
         }
     }
 }

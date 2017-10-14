@@ -1,8 +1,19 @@
-﻿namespace GW2Api.V2.Misc.Models
+﻿using Newtonsoft.Json;
+namespace GW2API.V2.Misc.Models
 {
+    [JsonObject]
     public class Quaggan
     {
-        public string id { get; set; }
-        public string url { get; set; }
+        /// <summary>
+        /// The quaggan identifier.
+        /// </summary>
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// The URL to the quaggan image.
+        /// </summary>
+        [JsonProperty("url")]
+        public string Url { get; set; }
     }
 }
