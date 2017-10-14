@@ -46,7 +46,9 @@
     <Compile Include="Common\GW2Client.cs" />
     <Compile Include="Common\GW2ClientAuthorized.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="V2\Authenticated\Account\Models\Achievement.cs" />
     <Compile Include="V2\Authenticated\Account\Models\Wallet.cs" />
+    <Compile Include="V2\Authenticated\Account\Repository\AchievementRepository.cs" />
     <Compile Include="V2\Authenticated\Account\Repository\WalletRepository.cs" />
     <Compile Include="V2\Misc\Models\Currency.cs" />
     <Compile Include="V2\Misc\Models\Quaggan.cs" />
